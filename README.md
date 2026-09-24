@@ -16,13 +16,13 @@ Prefer auditable, supply-chain-light tooling? This is your list.
 
 ## Contents
 
-- [Command-line & Productivity](#command-line-productivity)
+- [Command-line & Productivity](#command-line--productivity)
 - [Git](#git)
 - [Documentation](#documentation)
-- [JSON & Data](#json-data)
-- [API & Mocking](#api-mocking)
-- [Environment & Setup](#environment-setup)
-- [Libraries & single-file utilities](#libraries-single-file-utilities)
+- [JSON & Data](#json--data)
+- [API & Mocking](#api--mocking)
+- [Environment & Setup](#environment--setup)
+- [Libraries & single-file utilities](#libraries--single-file-utilities)
 - [Contributing](#contributing)
 - [License](#license)
 

@@ -97,11 +97,12 @@ test('rejects a Contents link with no matching heading', () => {
   );
 });
 
-test('slugify matches the fleet linkcheck convention', () => {
+test('slugify matches GitHub heading anchors (whitespace runs are NOT collapsed)', () => {
   assert.equal(slugify('Git'), 'git');
-  assert.equal(slugify('JSON & Data'), 'json-data');
-  assert.equal(slugify('Command-line & Productivity'), 'command-line-productivity');
-  assert.equal(slugify('Libraries & single-file utilities'), 'libraries-single-file-utilities');
+  // A stripped "&" leaves two spaces, which GitHub turns into two hyphens.
+  assert.equal(slugify('JSON & Data'), 'json--data');
+  assert.equal(slugify('Command-line & Productivity'), 'command-line--productivity');
+  assert.equal(slugify('Libraries & single-file utilities'), 'libraries--single-file-utilities');
 });
 
 test('compareNames is case-insensitive', () => {
@@ -113,4 +114,53 @@ test('ENTRY_RE captures the tool name and tolerates inner em dashes', () => {
   const m = '- [portkill](https://example.com/p) \u2014 Kill a port \u2014 in one command.'.match(ENTRY_RE);
   assert.ok(m);
   assert.equal(m[1], 'portkill');
+});
+
+// Regression: an "&" heading generates a double-hyphen GitHub anchor. A Contents
+// link using the old single-hyphen anchor is broken on GitHub and must be flagged.
+const AMP_BROKEN_TOC = [
+  '# X',
+  '## Contents',
+  '- [JSON & Data](#json-data)',
+  '## JSON & Data',
+  '- [alpha](https://example.com/a) \u2014 First.',
+].join('\n');
+
+const AMP_GOOD_TOC = [
+  '# X',
+  '## Contents',
+  '- [JSON & Data](#json--data)',
+  '## JSON & Data',
+  '- [alpha](https://example.com/a) \u2014 First.',
+].join('\n');
+
+test('rejects a single-hyphen Contents anchor for an "&" heading (GitHub-broken)', () => {
+  const res = lint(AMP_BROKEN_TOC);
+  assert.equal(res.ok, false);
+  assert.ok(
+    res.errors.some((e) => /does not match any section heading/i.test(e)),
+    res.errors.join('\n'),
+  );
+});
+
+test('accepts the correct double-hyphen Contents anchor for an "&" heading', () => {
+  const res = lint(AMP_GOOD_TOC);
+  assert.equal(res.ok, true, res.errors.join('\n'));
+});
+
+// Regression: trailing whitespace after the period is insignificant in Markdown
+// and must not turn a valid entry into a "malformed entry" error.
+const TRAILING_WS = [
+  '# X',
+  '## Contents',
+  '- [Tools](#tools)',
+  '## Tools',
+  '- [alpha](https://example.com/a) \u2014 First.   ',
+  '- [beta](https://example.com/b) \u2014 Second.\t',
+].join('\n');
+
+test('accepts entries with trailing whitespace after the period', () => {
+  const res = lint(TRAILING_WS);
+  assert.equal(res.ok, true, res.errors.join('\n'));
+  assert.equal(res.entryCount, 2);
 });

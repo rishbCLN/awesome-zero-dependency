@@ -20,13 +20,17 @@ import { pathToFileURL } from 'node:url';
 // A well-formed entry: "- [text](http(s)://url) — Description ending with a period."
 // The em dash is written as \u2014 so this source file is encoding-agnostic; the
 // first " \u2014 " after the URL is the separator, and the description (which may
-// itself contain em dashes) is everything up to the final period.
-export const ENTRY_RE = /^- \[([^\]]+)\]\((https?:\/\/[^)]+)\) \u2014 (.+\.)$/;
+// itself contain em dashes) is everything up to the final period. Trailing
+// whitespace after the period is insignificant in Markdown and is tolerated.
+export const ENTRY_RE = /^- \[([^\]]+)\]\((https?:\/\/[^)]+)\) \u2014 (.+\.)\s*$/;
 
 /**
- * GitHub-compatible heading -> anchor slug, matching the fleet's linkcheck tool:
- * lowercase, drop everything that is not a letter/number/space/underscore/hyphen,
- * then collapse whitespace runs into single hyphens. Pure and side-effect free.
+ * GitHub-compatible heading -> anchor slug, matching how GitHub actually builds
+ * heading anchors: lowercase, drop everything that is not a letter/number/space/
+ * underscore/hyphen, then replace EACH remaining whitespace character with a
+ * hyphen. GitHub does not collapse whitespace runs, so a heading like
+ * "JSON & Data" (where the stripped "&" leaves two spaces) becomes "json--data"
+ * with two hyphens, not "json-data". Pure and side-effect free.
  * @param {string} heading
  * @returns {string}
  */
@@ -35,7 +39,7 @@ export function slugify(heading) {
     .trim()
     .toLowerCase()
     .replace(/[^\p{L}\p{N}\s_-]+/gu, '')
-    .replace(/\s+/g, '-');
+    .replace(/\s/g, '-');
 }
 
 /** Case-insensitive, code-unit ordering used for the alphabetical check. */
