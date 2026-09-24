@@ -32,36 +32,36 @@ Prefer auditable, supply-chain-light tooling? This is your list.
 - [fd](https://github.com/sharkdp/fd) — A simple, fast, and user-friendly alternative to find.
 - [fzf](https://github.com/junegunn/fzf) — A general-purpose command-line fuzzy finder.
 - [hyperfine](https://github.com/sharkdp/hyperfine) — A command-line benchmarking tool with statistical analysis.
-- [pomo-cli](https://github.com/YOUR_USERNAME/pomo-cli) — A no-nonsense terminal Pomodoro timer with streaks and stats — zero dependencies, works on Windows, macOS, and Linux.
-- [portkill](https://github.com/YOUR_USERNAME/portkill) — Find and kill whatever process is hogging a port — on Windows, macOS, and Linux, in one command.
+- [pomo-cli](https://github.com/rishbCLN/pomo-cli) — A no-nonsense terminal Pomodoro timer with streaks and stats — zero dependencies, works on Windows, macOS, and Linux.
+- [portkill](https://github.com/rishbCLN/portkill) — Find and kill whatever process is hogging a port — on Windows, macOS, and Linux, in one command.
 - [ripgrep](https://github.com/BurntSushi/ripgrep) — Recursively search directories for a regex pattern, respecting your gitignore.
-- [snipvault](https://github.com/YOUR_USERNAME/snipvault) — An offline, fuzzy-searchable snippet manager for your terminal — stash commands & boilerplate, then copy them to the clipboard. Zero dependencies.
+- [snipvault](https://github.com/rishbCLN/snipvault) — An offline, fuzzy-searchable snippet manager for your terminal — stash commands & boilerplate, then copy them to the clipboard. Zero dependencies.
 
 ## Git
 
 - [delta](https://github.com/dandavison/delta) — A syntax-highlighting pager for git, diff, grep, and blame output.
 - [git-cliff](https://github.com/orhun/git-cliff) — A highly customizable changelog generator that follows Conventional Commits.
-- [gitsweep](https://github.com/YOUR_USERNAME/gitsweep) — Safely delete merged and stale local git branches — in one interactive command.
+- [gitsweep](https://github.com/rishbCLN/gitsweep) — Safely delete merged and stale local git branches — in one interactive command.
 - [lazygit](https://github.com/jesseduffield/lazygit) — A simple terminal UI for git commands.
 
 ## Documentation
 
 - [github-markdown-css](https://github.com/sindresorhus/github-markdown-css) — The minimal CSS needed to render Markdown the way GitHub does.
-- [linkcheck-md](https://github.com/YOUR_USERNAME/linkcheck-md) — Find dead links in your Markdown and docs — local files, anchors, and external URLs — locally and in CI. Zero dependencies.
+- [linkcheck-md](https://github.com/rishbCLN/linkcheck-md) — Find dead links in your Markdown and docs — local files, anchors, and external URLs — locally and in CI. Zero dependencies.
 - [marked](https://github.com/markedjs/marked) — A fast, low-level Markdown parser and compiler built for speed.
-- [readmine](https://github.com/YOUR_USERNAME/readmine) — Generate a beautiful README for your project in seconds — an interactive, zero-dependency wizard that reads your package.json and writes the docs for you.
+- [readmine](https://github.com/rishbCLN/readmine) — Generate a beautiful README for your project in seconds — an interactive, zero-dependency wizard that reads your package.json and writes the docs for you.
 
 ## JSON & Data
 
 - [fx](https://github.com/antonmedv/fx) — A terminal JSON viewer and processor with an interactive mode.
 - [gron](https://github.com/tomnomnom/gron) — Transform JSON into discrete, greppable assignments and back again.
 - [jq](https://github.com/jqlang/jq) — A lightweight and flexible command-line JSON processor.
-- [jsonpeek](https://github.com/YOUR_USERNAME/jsonpeek) — A fast terminal JSON viewer that also hands you the jq path to any value — zero dependencies.
+- [jsonpeek](https://github.com/rishbCLN/jsonpeek) — A fast terminal JSON viewer that also hands you the jq path to any value — zero dependencies.
 
 ## API & Mocking
 
 - [hurl](https://github.com/Orange-OpenSource/hurl) — Run and test HTTP requests defined in a simple plain-text format.
-- [jsonmock-cli](https://github.com/YOUR_USERNAME/jsonmock-cli) — Spin up a fake REST API from a tiny JSON file — in one command. Zero dependencies.
+- [jsonmock-cli](https://github.com/rishbCLN/jsonmock-cli) — Spin up a fake REST API from a tiny JSON file — in one command. Zero dependencies.
 - [oha](https://github.com/hatoo/oha) — A tiny HTTP load generator with a live terminal dashboard.
 - [xh](https://github.com/ducaale/xh) — A friendly and fast tool for sending HTTP requests.
 
@@ -69,7 +69,7 @@ Prefer auditable, supply-chain-light tooling? This is your list.
 
 - [direnv](https://github.com/direnv/direnv) — Load and unload environment variables per directory as you change folders.
 - [dotenv](https://github.com/motdotla/dotenv) — Load environment variables from a .env file into process.env.
-- [envcheck](https://github.com/YOUR_USERNAME/envcheck) — One command tells you why a project won't run on a new machine — required tools, versions, env vars, and files. Zero dependencies.
+- [envcheck](https://github.com/rishbCLN/envcheck) — One command tells you why a project won't run on a new machine — required tools, versions, env vars, and files. Zero dependencies.
 - [just](https://github.com/casey/just) — A handy command runner for saving and running project-specific tasks.
 
 ## Libraries & single-file utilities
