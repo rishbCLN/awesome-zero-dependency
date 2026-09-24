@@ -1,0 +1,15 @@
+{
+  "name": "awesome-zero-dependency",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A curated list of high-quality, zero-dependency and single-file developer tools.",
+  "license": "CC0-1.0",
+  "type": "module",
+  "scripts": {
+    "lint": "node scripts/lint.mjs",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

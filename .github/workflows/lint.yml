@@ -1,0 +1,32 @@
+name: lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    name: validate list (format, order, links, tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Blocking gate: the local, zero-dependency validator.
+      # Checks entry format, alphabetical order, duplicates, and the Contents TOC.
+      - name: Validate README format and ordering
+        run: node scripts/lint.mjs
+
+      # Blocking gate: unit tests for the validator's pure helpers.
+      - name: Run tests
+        run: node --test
+
+      # Non-blocking: dogfood the fleet's Markdown link checker.
+      # `|| true` keeps CI green until linkcheck-md is published to npm.
+      # Activates (and can be made blocking) once linkcheck-md is published.
+      - name: Check links with linkcheck-md (non-blocking)
+        run: npx --yes linkcheck-md README.md || true
