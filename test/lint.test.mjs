@@ -164,3 +164,58 @@ test('accepts entries with trailing whitespace after the period', () => {
   assert.equal(res.ok, true, res.errors.join('\n'));
   assert.equal(res.entryCount, 2);
 });
+
+// Regression: a destination URL may contain balanced parentheses (e.g. a
+// Wikipedia link). The old [^)]+ URL pattern stopped at the first ")" and
+// flagged the whole line as malformed.
+const URL_WITH_PARENS = [
+  '# X',
+  '## Contents',
+  '- [Tools](#tools)',
+  '## Tools',
+  '- [wiki](https://en.wikipedia.org/wiki/Foo_(bar)) \u2014 Named after Foo (bar).',
+].join('\n');
+
+test('accepts an entry whose URL contains balanced parentheses', () => {
+  const res = lint(URL_WITH_PARENS);
+  assert.equal(res.ok, true, res.errors.join('\n'));
+  assert.equal(res.entryCount, 1);
+  const m = '- [wiki](https://en.wikipedia.org/wiki/Foo_(bar)) \u2014 Named after Foo (bar).'.match(ENTRY_RE);
+  assert.ok(m);
+  assert.equal(m[2], 'https://en.wikipedia.org/wiki/Foo_(bar)');
+});
+
+// Regression: indented bullets are nested notes, not list entries, and must not
+// be format-checked as entries.
+const INDENTED_NOTE = [
+  '# X',
+  '## Contents',
+  '- [Tools](#tools)',
+  '## Tools',
+  '- [alpha](https://example.com/a) \u2014 First.',
+  '  - a nested note that is deliberately not an entry',
+].join('\n');
+
+test('ignores indented (nested) bullets when validating entries', () => {
+  const res = lint(INDENTED_NOTE);
+  assert.equal(res.ok, true, res.errors.join('\n'));
+  assert.equal(res.entryCount, 1);
+});
+
+// Regression: GitHub suffixes repeated identical headings (-1, -2, ...). A
+// Contents link to that suffixed anchor must resolve, not be flagged.
+const DUP_HEADING = [
+  '# X',
+  '## Contents',
+  '- [Tools](#tools)',
+  '- [Tools (again)](#tools-1)',
+  '## Tools',
+  '- [alpha](https://example.com/a) \u2014 First.',
+  '## Tools',
+  '- [beta](https://example.com/b) \u2014 Second.',
+].join('\n');
+
+test('resolves the -1 suffix GitHub adds to a repeated heading', () => {
+  const res = lint(DUP_HEADING);
+  assert.equal(res.ok, true, res.errors.join('\n'));
+});

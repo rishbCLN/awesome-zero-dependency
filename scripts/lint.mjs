@@ -22,7 +22,16 @@ import { pathToFileURL } from 'node:url';
 // first " \u2014 " after the URL is the separator, and the description (which may
 // itself contain em dashes) is everything up to the final period. Trailing
 // whitespace after the period is insignificant in Markdown and is tolerated.
-export const ENTRY_RE = /^- \[([^\]]+)\]\((https?:\/\/[^)]+)\) \u2014 (.+\.)\s*$/;
+//
+// The URL may itself contain balanced parentheses (e.g. Wikipedia links like
+// ".../Foo_(bar)"), so the destination is matched as a run of non-paren
+// characters plus any single-level balanced "(...)" groups, mirroring how
+// Markdown link destinations allow balanced parens. The link's own closing ")"
+// is whatever follows that run.
+const URL_RE = String.raw`https?:\/\/(?:[^()\s]|\([^()\s]*\))*`;
+export const ENTRY_RE = new RegExp(
+  String.raw`^- \[([^\]]+)\]\((${URL_RE})\) \u2014 (.+\.)\s*$`,
+);
 
 /**
  * GitHub-compatible heading -> anchor slug, matching how GitHub actually builds
@@ -71,7 +80,15 @@ export function lint(text) {
 
   const HEADING_RE = /^(#{1,6})\s+(.+?)\s*$/;
   const TOC_RE = /^\s*-\s+\[([^\]]+)\]\((#[^)]*)\)\s*$/;
-  const CANDIDATE_RE = /^\s*-\s+\[[^\]]+\]\(([^)]+)\)/;
+  // A tool entry is a TOP-LEVEL bullet (column 0). Indented bullets are notes or
+  // nested items and must not be validated as entries, so this pattern is not
+  // whitespace-tolerant on the left the way TOC_RE is.
+  const CANDIDATE_RE = /^-\s+\[[^\]]+\]\(([^)]+)\)/;
+
+  // GitHub disambiguates repeated identical headings by suffixing -1, -2, ...
+  // Track how many times each base slug has been seen so the second "## Tools"
+  // resolves to "tools-1", matching real anchors.
+  const anchorCounts = new Map();
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -89,7 +106,13 @@ export function lint(text) {
     if (heading) {
       const level = heading[1].length;
       const textOfHeading = heading[2];
-      validAnchors.add(slugify(textOfHeading));
+      const base = slugify(textOfHeading);
+      // Replicate GitHub's collision suffixing: first use is the bare slug,
+      // repeats become "slug-1", "slug-2", ...
+      const seen = anchorCounts.get(base) || 0;
+      const anchor = seen === 0 ? base : `${base}-${seen}`;
+      anchorCounts.set(base, seen + 1);
+      validAnchors.add(anchor);
       if (level === 2) {
         currentH2 = textOfHeading;
         inContents = /^contents$/i.test(textOfHeading.trim());
